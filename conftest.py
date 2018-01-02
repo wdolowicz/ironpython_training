@@ -6,10 +6,11 @@ import os.path
 from fixture.application import Application_2
 
 import clr
-clr.AddReferenceByName('Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c')
+clr.AddReferenceByName('Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c')
 from Microsoft.Office.Interop import Excel
 
 fixture = None
+
 
 @pytest.fixture
 def app(request):
@@ -18,6 +19,7 @@ def app(request):
         fixture = Application_2()
     return fixture
 
+
 @pytest.fixture(scope="session", autouse=True)
 def stop(request):
     def fin():
@@ -25,11 +27,13 @@ def stop(request):
     request.addfinalizer(fin)
     return fixture
 
+
 def pytest_generate_tests(metafunc):
     for fixture in metafunc.fixturenames:
         if fixture.startswith("xlsx_"):
             testdata = load_from_xlsx(fixture[5:])
             metafunc.parametrize(fixture, testdata, ids=[str(x) for x in testdata])
+
 
 def load_from_xlsx(file):
     f = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data\%s.xlsx" % file)
