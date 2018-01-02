@@ -1,11 +1,9 @@
 __author__ = 'wdolowicz'
 
-from model.group import Group
 
-
-def test_add_group(app):
+def test_add_group(app, xlsx_groups):
+    group = xlsx_groups
     old_list = app.group.get_group_list(app.main_window)
-    group = Group(name='test')
     app.group.add_new_group(app.main_window, group)
     new_list = app.group.get_group_list(app.main_window)
     old_list.append(group.name)
